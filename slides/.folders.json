@@ -1,4 +1,15 @@
 {
-  "folders": [],
-  "assignments": {}
+  "folders": [
+    {
+      "id": "f-20260001",
+      "name": "2026 月報",
+      "icon": {
+        "type": "emoji",
+        "value": "🗓️"
+      }
+    }
+  ],
+  "assignments": {
+    "2026-09-monthly-report": "f-20260001"
+  }
 }
