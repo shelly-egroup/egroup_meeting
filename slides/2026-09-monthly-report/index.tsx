@@ -1,5 +1,7 @@
+import { useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import type { DesignSystem, Page, SlideMeta } from "@open-slide/core";
+import sandboxFlow from "./assets/sandbox-flow.png";
 
 const colors = {
   cream: "#F7F2E7",
@@ -489,18 +491,252 @@ function NextMonth() {
   );
 }
 
+const sandboxViewportWidth = 1668;
+const sandboxViewportHeight = 790;
+const sandboxImageWidth = 756;
+const sandboxImageHeight = 790;
+
+function SandboxControlButton({
+  children,
+  ariaLabel,
+  onClick,
+  disabled = false,
+  width = 64,
+}: {
+  children: ReactNode;
+  ariaLabel: string;
+  onClick: () => void;
+  disabled?: boolean;
+  width?: number;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={ariaLabel}
+      disabled={disabled}
+      onClick={onClick}
+      style={{
+        width,
+        height: 64,
+        padding: "0 18px",
+        border: "2px solid rgba(255, 255, 255, 0.3)",
+        borderRadius: 16,
+        background: disabled ? "rgba(255, 255, 255, 0.05)" : "rgba(4, 28, 52, 0.86)",
+        color: disabled ? "rgba(255, 255, 255, 0.35)" : colors.paper,
+        fontFamily,
+        fontSize: 26,
+        lineHeight: 1,
+        fontWeight: 850,
+        whiteSpace: "nowrap",
+        boxSizing: "border-box",
+        cursor: disabled ? "default" : "pointer",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
 function Sandbox() {
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef<{
+    pointerX: number;
+    pointerY: number;
+    panX: number;
+    panY: number;
+    renderScale: number;
+  } | null>(null);
+
+  const clampPan = (x: number, y: number, scale: number) => {
+    const maxX = Math.max(0, (sandboxImageWidth * scale - sandboxViewportWidth) / 2);
+    const maxY = Math.max(0, (sandboxImageHeight * scale - sandboxViewportHeight) / 2);
+
+    return {
+      x: Math.max(-maxX, Math.min(maxX, x)),
+      y: Math.max(-maxY, Math.min(maxY, y)),
+    };
+  };
+
+  const setZoomLevel = (nextZoom: number) => {
+    const clampedZoom = Math.max(1, Math.min(2.6, Math.round(nextZoom * 10) / 10));
+    setZoom(clampedZoom);
+    setPan((currentPan) => clampPan(currentPan.x, currentPan.y, clampedZoom));
+  };
+
+  const resetImage = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
   return (
     <section style={{ ...base, background: colors.navy, color: colors.paper, display: "grid", placeItems: "center" }}>
-      <div style={{ textAlign: "center" }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 18, marginBottom: 34 }}>
-          <div style={{ width: 62, height: 8, borderRadius: 99, background: colors.bug }} />
-          <div style={{ width: 62, height: 8, borderRadius: 99, background: colors.teal }} />
-          <div style={{ width: 62, height: 8, borderRadius: 99, background: colors.gold }} />
+      <div
+        style={{
+          position: "absolute",
+          top: 48,
+          left: 126,
+          zIndex: 3,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+          <div style={{ width: 44, height: 6, borderRadius: 99, background: colors.bug }} />
+          <div style={{ width: 44, height: 6, borderRadius: 99, background: colors.teal }} />
+          <div style={{ width: 44, height: 6, borderRadius: 99, background: colors.gold }} />
         </div>
-        <div style={{ fontSize: 150, lineHeight: 1.02, fontWeight: 900, letterSpacing: "-0.02em", fontVariationSettings: '"wght" 900' }}>沙盒進度</div>
+        <div
+          style={{
+            fontSize: 68,
+            lineHeight: 1,
+            fontWeight: 900,
+            letterSpacing: "-0.015em",
+            fontVariationSettings: '"wght" 900',
+          }}
+        >
+          沙盒進度
+        </div>
+      </div>
+      <div
+        aria-label="可縮放的沙盒流程圖"
+        onDoubleClick={() => setZoomLevel(zoom === 1 ? 1.8 : 1)}
+        onPointerDown={(event) => {
+          if (zoom === 1) return;
+          dragStart.current = {
+            pointerX: event.clientX,
+            pointerY: event.clientY,
+            panX: pan.x,
+            panY: pan.y,
+            renderScale: event.currentTarget.getBoundingClientRect().width / sandboxViewportWidth,
+          };
+          event.currentTarget.setPointerCapture(event.pointerId);
+          setIsDragging(true);
+        }}
+        onPointerMove={(event) => {
+          if (!dragStart.current) return;
+          const nextPan = clampPan(
+            dragStart.current.panX + (event.clientX - dragStart.current.pointerX) / dragStart.current.renderScale,
+            dragStart.current.panY + (event.clientY - dragStart.current.pointerY) / dragStart.current.renderScale,
+            zoom,
+          );
+          setPan(nextPan);
+        }}
+        onPointerUp={(event) => {
+          dragStart.current = null;
+          if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+            event.currentTarget.releasePointerCapture(event.pointerId);
+          }
+          setIsDragging(false);
+        }}
+        onPointerCancel={() => {
+          dragStart.current = null;
+          setIsDragging(false);
+        }}
+        style={{
+          position: "absolute",
+          top: 164,
+          left: 126,
+          width: sandboxViewportWidth,
+          height: sandboxViewportHeight,
+          background: colors.navy,
+          display: "grid",
+          placeItems: "center",
+          overflow: "hidden",
+          touchAction: "none",
+          cursor: zoom === 1 ? "zoom-in" : isDragging ? "grabbing" : "grab",
+        }}
+      >
+        <img
+          src={sandboxFlow}
+          alt="課務、沙盒與 Info 的完整作業流程圖"
+          draggable={false}
+          style={{
+            display: "block",
+            width: sandboxImageWidth,
+            height: sandboxImageHeight,
+            objectFit: "contain",
+            borderRadius: 24,
+            boxShadow: "0 28px 80px rgba(0, 0, 0, 0.32)",
+            transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+            transformOrigin: "center center",
+            transition: isDragging ? "none" : "transform 180ms ease",
+            userSelect: "none",
+          }}
+        />
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          top: 52,
+          right: 126,
+          zIndex: 3,
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <SandboxControlButton ariaLabel="縮小流程圖" onClick={() => setZoomLevel(zoom - 0.4)} disabled={zoom === 1}>
+          −
+        </SandboxControlButton>
+        <div
+          style={{
+            width: 104,
+            color: colors.paper,
+            fontSize: 25,
+            fontWeight: 850,
+            textAlign: "center",
+            textShadow: "0 2px 12px rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          {Math.round(zoom * 100)}%
+        </div>
+        <SandboxControlButton ariaLabel="放大流程圖" onClick={() => setZoomLevel(zoom + 0.4)} disabled={zoom === 2.6}>
+          ＋
+        </SandboxControlButton>
+        <SandboxControlButton ariaLabel="讓流程圖適合畫面" onClick={resetImage} disabled={zoom === 1} width={158}>
+          適合畫面
+        </SandboxControlButton>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 52,
+          zIndex: 2,
+          color: colors.paper,
+          fontSize: 22,
+          fontWeight: 750,
+          letterSpacing: "0.04em",
+          textAlign: "center",
+          opacity: 0.64,
+          pointerEvents: "none",
+        }}
+      >
+        {zoom === 1 ? "使用＋放大" : "拖曳圖片查看細節"}
       </div>
       <Footer dark />
+      <a
+        href="https://egroup-sandbox.vercel.app/"
+        target="_blank"
+        rel="noreferrer"
+        onClick={(event) => event.stopPropagation()}
+        style={{
+          position: "absolute",
+          right: 126,
+          bottom: 50,
+          zIndex: 2,
+          color: "#AFC1CE",
+          fontSize: 22,
+          lineHeight: 1,
+          fontWeight: 800,
+          letterSpacing: "0.04em",
+          textDecoration: "none",
+          opacity: 0.78,
+        }}
+      >
+        sandbox ↗
+      </a>
     </section>
   );
 }
