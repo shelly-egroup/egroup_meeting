@@ -715,6 +715,33 @@ function Sandbox() {
         <SandboxControlButton ariaLabel="讓流程圖適合畫面" onClick={resetImage} disabled={zoom === 1} width={158}>
           適合畫面
         </SandboxControlButton>
+        <a
+          href={sandboxFlow}
+          download="課務-沙盒-Info-作業流程.png"
+          aria-label="下載沙盒流程圖原始圖片"
+          onClick={(event) => event.stopPropagation()}
+          style={{
+            height: 64,
+            padding: "0 22px",
+            border: "2px solid rgba(255, 255, 255, 0.3)",
+            borderRadius: 16,
+            background: colors.gold,
+            color: colors.navy,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxSizing: "border-box",
+            fontFamily,
+            fontSize: 24,
+            lineHeight: 1,
+            fontWeight: 900,
+            whiteSpace: "nowrap",
+            textDecoration: "none",
+            cursor: "pointer",
+          }}
+        >
+          下載圖片
+        </a>
       </div>
       <div
         style={{
