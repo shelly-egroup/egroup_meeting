@@ -200,20 +200,38 @@ function DbsBug({ children }: { children: ReactNode }) {
   );
 }
 
-function PlanRow({ no, title, note }: { no: string; title: string; note: string }) {
+function PlanRow({
+  no,
+  system,
+  title,
+  note,
+  groupStart = false,
+}: {
+  no: string;
+  system: "INFO" | "DBS";
+  title: string;
+  note: string;
+  groupStart?: boolean;
+}) {
+  const systemColor = system === "DBS" ? colors.teal : colors.gold;
+
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "116px 570px 1fr",
+        gridTemplateColumns: "88px 146px 520px 1fr",
         alignItems: "center",
-        minHeight: 178,
-        borderTop: `1px solid ${colors.line}`,
+        minHeight: 132,
+        borderTop: groupStart ? `3px solid ${systemColor}` : `1px solid ${colors.line}`,
       }}
     >
-      <div style={{ color: colors.gold, fontSize: 32, fontWeight: 900, letterSpacing: "0.08em" }}>{no}</div>
-      <div style={{ color: colors.navy, fontSize: 40, lineHeight: 1.25, fontWeight: 900 }}>{title}</div>
-      <div style={{ color: colors.muted, fontSize: 40, lineHeight: 1.3, fontWeight: 750, fontVariationSettings: '"wght" 750' }}>{note}</div>
+      <div style={{ color: systemColor, fontSize: 30, fontWeight: 900, letterSpacing: "0.08em" }}>{no}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, color: systemColor }}>
+        <span style={{ width: 8, height: 34, borderRadius: 99, background: systemColor }} />
+        <span style={{ fontSize: 24, fontWeight: 900, letterSpacing: "0.08em" }}>{system}</span>
+      </div>
+      <div style={{ color: colors.navy, fontSize: 36, lineHeight: 1.25, fontWeight: 900 }}>{title}</div>
+      <div style={{ color: colors.muted, fontSize: 34, lineHeight: 1.3, fontWeight: 750, fontVariationSettings: '"wght" 750' }}>{note}</div>
     </div>
   );
 }
@@ -360,8 +378,8 @@ function InfoComplete() {
   return (
     <section style={{ ...base, ...pagePad }}>
       <Header section="INFO" title="本月完成" accent={colors.bug} />
-      <div style={{ display: "grid", gridTemplateColumns: ".93fr 1.07fr", gap: 34, marginTop: 58 }}>
-        <div style={{ height: 625, display: "grid", gridTemplateRows: "260px 1fr", gap: 26 }}>
+      <div style={{ display: "grid", gridTemplateColumns: ".93fr 1.07fr", gap: 34, marginTop: 58, alignItems: "stretch" }}>
+        <div style={{ display: "grid", gridTemplateRows: "260px auto", gap: 26 }}>
           <div
             style={{
               borderRadius: 24,
@@ -394,7 +412,6 @@ function InfoComplete() {
         </div>
         <div
           style={{
-            height: 625,
             borderRadius: 24,
             background: colors.paper,
             border: `2px solid ${colors.bugSoft}`,
@@ -421,7 +438,7 @@ function InfoComplete() {
 function Dbs() {
   return (
     <section style={{ ...base, ...pagePad }}>
-      <Header section="DBS" title="穩定性與功能串接" accent={colors.teal} />
+      <Header section="DBS" title="本月完成" accent={colors.teal} />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 34, marginTop: 72 }}>
         <div
           style={{
@@ -480,11 +497,13 @@ function Dbs() {
 function NextMonth() {
   return (
     <section style={{ ...base, ...pagePad }}>
-      <Header section="INFO" title="本月預計" accent={colors.gold} />
-      <div style={{ marginTop: 76 }}>
-        <PlanRow no="01" title="事件儀表板" note="聚焦提醒、執行情況與單位視角。" />
-        <PlanRow no="02" title="分享範本規則通用化" note="整合 Tags、預設事件與轉介流程。" />
-        <PlanRow no="03" title="單位列表功能對齊" note="對齊個人列表的核心操作體驗。" />
+      <Header section="INFO × DBS" title="本月預計" accent={colors.gold} />
+      <div style={{ marginTop: 48 }}>
+        <PlanRow no="01" system="INFO" title="事件儀表板" note="聚焦提醒、執行情況與單位視角。" groupStart />
+        <PlanRow no="02" system="INFO" title="分享範本規則通用化" note="整合 Tags、預設事件與轉介流程。" />
+        <PlanRow no="03" system="INFO" title="單位列表功能對齊" note="對齊個人列表的核心操作體驗。" />
+        <PlanRow no="04" system="INFO" title="匯入（分享）動態欄位" note="分享匯入時一併處理動態欄位。" />
+        <PlanRow no="05" system="DBS" title="文章 AI 推薦" note="依內容推薦相關文章與工具。" groupStart />
       </div>
       <Footer />
     </section>
@@ -735,7 +754,7 @@ function Sandbox() {
           opacity: 0.78,
         }}
       >
-        sandbox ↗
+        sandbox
       </a>
     </section>
   );
