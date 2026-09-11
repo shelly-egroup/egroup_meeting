@@ -7,9 +7,18 @@
         "type": "emoji",
         "value": "🗓️"
       }
+    },
+    {
+      "id": "f-20260002",
+      "name": "2026 週會",
+      "icon": {
+        "type": "emoji",
+        "value": "📋"
+      }
     }
   ],
   "assignments": {
-    "2026-09-monthly-report": "f-20260001"
+    "2026-09-monthly-report": "f-20260001",
+    "2026-09-14-weekly-meeting": "f-20260002"
   }
 }
