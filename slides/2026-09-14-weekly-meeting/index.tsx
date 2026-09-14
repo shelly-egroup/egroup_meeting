@@ -248,6 +248,28 @@ const Info: Page = () => (
   </Frame>
 );
 
+const InfoContinued: Page = () => (
+  <Frame name="Info 續頁">
+    <Heading title="Info" subtitle="分享範本與 DB 還原" />
+    <div data-content style={{
+      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 95, marginTop: 100,
+    }}>
+      <InfoItem number="05" title="分享範本" planned>
+        <p style={{ fontSize: 'var(--osd-size-body)', lineHeight: 1.6, margin: '22px 0 0', color: c.muted, ...bold }}>
+          修正分享名稱不同步
+        </p>
+        <TaskTarget />
+      </InfoItem>
+      <InfoItem number="06" title="DB 還原" planned>
+        <p style={{ fontSize: 'var(--osd-size-body)', lineHeight: 1.6, margin: '22px 0 0', color: c.muted, ...bold }}>
+          嘗試匯入合併 DB 還原
+        </p>
+        <TaskTarget />
+      </InfoItem>
+    </div>
+  </Frame>
+);
+
 function DbsItem({ number, title, detail, planned = false, completed = false }: {
   number: string; title: string; detail?: string; planned?: boolean; completed?: boolean;
 }) {
@@ -288,7 +310,7 @@ const DbsAndSandbox: Page = () => (
         <div style={{ marginTop: 20, color: c.light, fontSize: 32, ...heavy }}>預計完成　11 月底</div>
         <div style={{ marginTop: 25, fontSize: 32, color: c.light, ...heavy }}>本週預計</div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 26, marginTop: 5 }}>
-          <span style={{ fontSize: 102, ...heavy, lineHeight: 1.1 }}>10<span style={{ fontSize: 43 }}>%</span></span>
+          <span style={{ fontSize: 102, ...heavy, lineHeight: 1.1 }}>8<span style={{ fontSize: 43 }}>%</span></span>
           <span style={{ color: c.light, fontSize: 32, ...heavy }}>目前 5%</span>
         </div>
         <div style={{ height: 1, background: '#506F8A', margin: '24px 0 20px' }} />
@@ -299,4 +321,4 @@ const DbsAndSandbox: Page = () => (
   </Frame>
 );
 
-export default [Cover, AIOps, Info, DbsAndSandbox] satisfies Page[];
+export default [Cover, AIOps, Info, InfoContinued, DbsAndSandbox] satisfies Page[];
