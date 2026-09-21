@@ -89,8 +89,8 @@ function Frame({ name, children }: { name: string; children: ReactNode }) {
   );
 }
 
-function TaskTarget({ stacked = false, inline = false, targetDate = '9/24' }: {
-  stacked?: boolean; inline?: boolean; targetDate?: string;
+function TaskTarget({ stacked = false, inline = false, targetDate = '9/24', target = 100 }: {
+  stacked?: boolean; inline?: boolean; targetDate?: string; target?: number;
 }) {
   return (
     <div data-task-target style={{
@@ -99,7 +99,7 @@ function TaskTarget({ stacked = false, inline = false, targetDate = '9/24' }: {
       fontSize: 30, lineHeight: 1.4, ...heavy,
     }}>
       <span style={{ whiteSpace: 'nowrap', color: c.muted }}>
-        本週預計 <strong style={{ fontSize: 36, color: 'var(--osd-accent)', ...heavy }}>100%</strong>
+        本週預計 <strong style={{ fontSize: 36, color: 'var(--osd-accent)', ...heavy }}>{target}%</strong>
       </span>
       <span style={{ whiteSpace: 'nowrap', color: c.muted }}>
         預計完成 <strong style={{ fontSize: 36, color: c.navy, ...heavy }}>{targetDate}</strong>
@@ -215,7 +215,7 @@ function InProgressStatus() {
   );
 }
 
-function CurrentProgress({ value, label = '目前' }: { value: number; label?: string }) {
+function CurrentProgress({ value, label = '目前', target = 100 }: { value: number; label?: string; target?: number }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 36, marginTop: 24 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 15 }}>
@@ -224,7 +224,7 @@ function CurrentProgress({ value, label = '目前' }: { value: number; label?: s
           {value}<span style={{ fontSize: 35 }}>%</span>
         </span>
       </div>
-      <TaskTarget stacked />
+      <TaskTarget stacked target={target} />
     </div>
   );
 }
@@ -323,7 +323,7 @@ const InfoContinued: Page = () => (
         <p style={{ fontSize: 30, lineHeight: 1.5, margin: '15px 0 0', color: c.muted, ...bold }}>
           支援將案件轉交其他單位處理
         </p>
-        <PlannedProgress />
+        <CurrentProgress value={0} target={85} />
       </InfoItem>
       <InfoItem number="06" title="CRM User 性別" planned>
         <p style={{ fontSize: 30, lineHeight: 1.5, margin: '15px 0 0', color: c.muted, ...bold }}>
