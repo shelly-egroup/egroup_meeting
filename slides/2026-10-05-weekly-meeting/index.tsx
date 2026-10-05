@@ -338,4 +338,33 @@ const DbsAndSandbox: Page = () => (
   </Frame>
 );
 
-export default [Cover, AIOpsCompleted, AIOpsThisWeek, InfoCompleted, InfoThisWeek, DbsAndSandbox] satisfies Page[];
+const AutumnOutingWebsite: Page = () => (
+  <Frame name="秋遊活動與投票網頁">
+    <Heading title="秋遊活動與投票網頁" subtitle="網站製作進度" />
+    <div data-content style={{
+      height: 520, boxSizing: 'border-box', padding: '56px 72px',
+      display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+      marginTop: 68, background: c.paper, border: `1px solid ${c.rule}`,
+      borderLeft: `10px solid ${c.gold}`, borderRadius: 'var(--osd-radius)',
+    }}>
+      <Label color={c.gold}>秋遊活動 × 投票網頁</Label>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 18 }}>
+          <span style={{ fontSize: 34, color: c.muted, ...heavy }}>目前</span>
+          <strong style={{ fontSize: 156, lineHeight: 1.1, color: c.teal, ...heavy }}>
+            90<span style={{ fontSize: 64 }}>%</span>
+          </strong>
+        </div>
+        <div style={{ textAlign: 'right', paddingBottom: 15, fontSize: 34, lineHeight: 1.55, color: c.muted, ...heavy }}>
+          <div>本週預計 <strong style={{ color: 'var(--osd-accent)', fontSize: 46 }}>100%</strong></div>
+          <div>預計完成 <strong style={{ color: c.navy, fontSize: 46 }}>10/8</strong></div>
+        </div>
+      </div>
+      <div style={{ height: 20, background: c.tealSoft, borderRadius: 999 }}>
+        <div style={{ width: '90%', height: '100%', background: c.teal, borderRadius: 999 }} />
+      </div>
+    </div>
+  </Frame>
+);
+
+export default [Cover, AIOpsCompleted, AIOpsThisWeek, InfoCompleted, InfoThisWeek, DbsAndSandbox, AutumnOutingWebsite] satisfies Page[];
