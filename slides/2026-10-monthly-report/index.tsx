@@ -5,6 +5,7 @@ import sandboxUser from './assets/sandbox-user.png';
 import sandboxIT from './assets/sandbox-it.png';
 import sandboxFlow from './assets/sandbox-flow.png';
 import autumnOutingQr from './assets/autumn-outing-qr.png';
+import sandboxVideoPoster from './assets/course-sandbox-video-poster.png';
 
 const sandboxPresentationVideo = new URL('./assets/course-sandbox-presentation-v3.mp4', import.meta.url).href;
 
@@ -370,19 +371,32 @@ const SandboxVideo: Page = () => (
   <section style={{ ...base, background: c.navy, color: c.paper, padding: '70px 126px 72px' }}>
     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
       <div>
-        <div style={{ color: c.gold, fontSize: 25, letterSpacing: '0.12em', ...heavy }}>INFO × SANDBOX</div>
-        <h1 style={{ margin: '12px 0 0', fontSize: 64, lineHeight: 1.08, letterSpacing: '-0.02em', ...heavy }}>課務 × 沙盒｜發表影片</h1>
+        <div style={{ color: c.gold, fontSize: 25, letterSpacing: '0.12em', ...heavy }}>MONEY TRAINER × SANDBOX</div>
+        <h1 style={{ margin: '12px 0 0', fontSize: 64, lineHeight: 1.08, letterSpacing: '-0.02em', ...heavy }}>課務 × 沙盒｜DEMO示意影片</h1>
       </div>
-      <div style={{ color: '#AFC9DB', fontSize: 25, letterSpacing: '0.1em', ...heavy }}>PRESENTATION VIDEO</div>
+      <a
+        href="https://drive.google.com/file/d/1swa2zfuUqvKqYIbxBjapawgyFlUxRDit/view?usp=sharing"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Google Drive 備援影片"
+        style={{ color: '#AFC9DB', fontSize: 25, letterSpacing: '0.1em', textDecoration: 'none', cursor: 'pointer', ...heavy }}
+      >
+        PRESENTATION VIDEO
+      </a>
     </div>
 
     <div style={{ marginTop: 30, height: 760, borderRadius: 26, background: '#071D31', border: '2px solid #3D607C', padding: 12, boxSizing: 'border-box', boxShadow: '0 28px 80px rgba(0,0,0,.28)' }}>
       <video
         src={sandboxPresentationVideo}
+        poster={sandboxVideoPoster}
         controls
         playsInline
         preload="metadata"
-        style={{ display: 'block', width: '100%', height: '100%', borderRadius: 16, background: '#05080B', objectFit: 'contain' }}
+        onPlay={(event) => {
+          event.currentTarget.removeAttribute('poster');
+          event.currentTarget.style.background = '#05080B';
+        }}
+        style={{ display: 'block', width: '100%', height: '100%', borderRadius: 16, background: c.cream, objectFit: 'contain' }}
       >
         您的瀏覽器不支援影片播放。
       </video>
