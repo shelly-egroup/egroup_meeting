@@ -194,17 +194,16 @@ const DbsCompleted: Page = () => (
 const InfoCompleted: Page = () => (
   <Frame section="INFO" title="本月完成" accent={c.coral}>
     <div style={{ display: 'grid', gridTemplateColumns: '.93fr 1.07fr', gap: 34, marginTop: 58 }}>
-      <div style={{ display: 'grid', gridTemplateRows: '180px 300px 148px', gap: 18 }}>
-        <div style={{ borderRadius: 24, background: c.navy, color: c.paper, padding: '23px 34px', boxSizing: 'border-box' }}>
+      <div style={{ display: 'grid', gridTemplateRows: '200px 280px 148px', gap: 18 }}>
+        <div style={{ borderRadius: 24, background: c.navy, color: c.paper, padding: '23px 34px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{ color: '#C4D8E9', fontSize: 26, ...heavy }}>功能聚焦</div>
           <h2 style={{ fontSize: 45, lineHeight: 1.16, margin: '12px 0 0', ...heavy }}>事件儀表板</h2>
           <p style={{ color: '#C4D8E9', fontSize: 18, lineHeight: 1.3, margin: '8px 0 0', ...bold }}>聚焦提醒、執行情況與單位視角。</p>
         </div>
-        <div style={{ borderRadius: 24, background: c.tealSoft, padding: '12px 30px', boxSizing: 'border-box' }}>
+        <div style={{ borderRadius: 24, background: c.tealSoft, padding: '12px 30px', boxSizing: 'border-box', display: 'grid', gridTemplateRows: 'auto 1fr 1fr' }}>
           <div style={{ color: c.teal, fontSize: 25, marginBottom: 2, ...heavy }}>分享與列表</div>
           <FeatureRow number="01" title="分享範本規則通用化" note="整合 Tags、預設事件與轉介流程。" />
           <FeatureRow number="02" title="單位列表功能對齊" note="對齊個人列表的核心操作體驗。" />
-          <FeatureRow number="03" title="匯入（分享）動態欄位" note="分享匯入時一併處理動態欄位。" />
         </div>
         <div style={{ borderRadius: 24, background: c.goldSoft, padding: '16px 28px', boxSizing: 'border-box', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 24 }}>
           <div style={{ borderTop: `5px solid ${c.gold}`, paddingTop: 10 }}>
@@ -229,7 +228,7 @@ const InfoCompleted: Page = () => (
         <ResultRow number="04" color={c.coral} compact>DBS 事件依填表姓名；事件名採個案姓名</ResultRow>
         <ResultRow number="05" color={c.coral} compact>布告欄返回列表還原查詢位置</ResultRow>
         <ResultRow number="06" color={c.coral} compact>無留言事件也可匯出</ResultRow>
-        <ResultRow number="07" color={c.coral} compact>Milvus 搜尋連線修正</ResultRow>
+        <ResultRow number="07" color={c.coral} compact>Milvus 搜尋連線修正（AI 文章推薦）</ResultRow>
       </div>
     </div>
   </Frame>
