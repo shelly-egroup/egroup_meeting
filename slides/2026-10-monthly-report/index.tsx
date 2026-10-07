@@ -6,6 +6,8 @@ import sandboxIT from './assets/sandbox-it.png';
 import sandboxFlow from './assets/sandbox-flow.png';
 import autumnOutingQr from './assets/autumn-outing-qr.png';
 
+const sandboxPresentationVideo = new URL('./assets/course-sandbox-presentation-v3.mp4', import.meta.url).href;
+
 const c = {
   cream: '#F7F2E7',
   paper: '#FFFDF8',
@@ -364,6 +366,32 @@ const SandboxDiagram: Page = () => {
   );
 };
 
+const SandboxVideo: Page = () => (
+  <section style={{ ...base, background: c.navy, color: c.paper, padding: '70px 126px 72px' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+      <div>
+        <div style={{ color: c.gold, fontSize: 25, letterSpacing: '0.12em', ...heavy }}>INFO × SANDBOX</div>
+        <h1 style={{ margin: '12px 0 0', fontSize: 64, lineHeight: 1.08, letterSpacing: '-0.02em', ...heavy }}>課務 × 沙盒｜發表影片</h1>
+      </div>
+      <div style={{ color: '#AFC9DB', fontSize: 25, letterSpacing: '0.1em', ...heavy }}>PRESENTATION VIDEO</div>
+    </div>
+
+    <div style={{ marginTop: 30, height: 760, borderRadius: 26, background: '#071D31', border: '2px solid #3D607C', padding: 12, boxSizing: 'border-box', boxShadow: '0 28px 80px rgba(0,0,0,.28)' }}>
+      <video
+        src={sandboxPresentationVideo}
+        controls
+        playsInline
+        preload="metadata"
+        style={{ display: 'block', width: '100%', height: '100%', borderRadius: 16, background: '#05080B', objectFit: 'contain' }}
+      >
+        您的瀏覽器不支援影片播放。
+      </video>
+    </div>
+
+    <Footer dark />
+  </section>
+);
+
 const WorkHardPlayHard: Page = () => (
   <section style={{ ...base, padding: '92px 126px 88px' }}>
     <div style={{ color: c.coral, fontSize: 28, letterSpacing: '0.12em', ...heavy }}>MY KPI</div>
@@ -449,4 +477,4 @@ const AutumnOuting: Page = () => (
   </section>
 );
 
-export default [Cover, AIOpsCompleted, DbsCompleted, InfoCompleted, NextMonth, SandboxNumbers, SandboxDiagram, WorkHardPlayHard, AutumnOuting] satisfies Page[];
+export default [Cover, AIOpsCompleted, DbsCompleted, InfoCompleted, NextMonth, SandboxNumbers, SandboxDiagram, SandboxVideo, WorkHardPlayHard, AutumnOuting] satisfies Page[];
