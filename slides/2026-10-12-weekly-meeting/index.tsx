@@ -176,7 +176,7 @@ function ProgressBlock({ current, target = 100, compact = false }: { current: nu
 function PendingCard({ number, title, detail }: { number: string; title: string; detail: string }) {
   return (
     <article style={{
-      height: 500, boxSizing: 'border-box', padding: '42px 48px',
+      height: 360, boxSizing: 'border-box', padding: '42px 48px',
       display: 'flex', flexDirection: 'column',
       background: c.paper, border: `1px solid ${c.rule}`,
       borderTop: `8px solid ${c.gold}`, borderRadius: 'var(--osd-radius)',
@@ -194,22 +194,31 @@ function PendingCard({ number, title, detail }: { number: string; title: string;
 
 const AIOps: Page = () => (
   <Frame name="AIOps">
-    <Heading title="AIOps" subtitle="標籤套用與會員權限" />
-    <div data-content style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 46, marginTop: 66 }}>
-      <PendingCard number="01" title="範本標籤套用改為可選" detail="釐清套用流程與預設狀態" />
-      <PendingCard number="02" title="權限可查看的標籤" detail="僅顯示會員有讀取權限的標籤" />
+    <Heading title="AIOps" subtitle="個案刪除、標籤套用與會員權限" />
+    <div data-content style={{ marginTop: 34 }}>
+      <CompletedBanner
+        title="社工工作台個案刪除流程修正"
+        detail="後端改採軟刪除並保留歷程、補強權限；前端改善錯誤提示與結果確認。"
+      />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 46, marginTop: 24 }}>
+        <PendingCard number="01" title="範本標籤套用改為可選" detail="釐清套用流程與預設狀態" />
+        <PendingCard number="02" title="權限可查看的標籤" detail="僅顯示會員有讀取權限的標籤" />
+      </div>
     </div>
   </Frame>
 );
 
-function CompletedBanner({ title }: { title: string }) {
+function CompletedBanner({ title, detail }: { title: string; detail?: string }) {
   return (
     <article style={{
-      minHeight: 126, boxSizing: 'border-box', padding: '24px 32px',
+      minHeight: detail ? 160 : 126, boxSizing: 'border-box', padding: '24px 32px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 36,
       background: c.paper, borderLeft: `8px solid ${c.teal}`, borderRadius: 'var(--osd-radius)',
     }}>
-      <h2 style={{ margin: 0, fontSize: 44, lineHeight: 1.3, ...heavy }}>{title}</h2>
+      <div>
+        <h2 style={{ margin: 0, fontSize: 44, lineHeight: 1.3, ...heavy }}>{title}</h2>
+        {detail && <p style={{ margin: '10px 0 0', color: c.muted, fontSize: 30, lineHeight: 1.4, ...bold }}>{detail}</p>}
+      </div>
       <CompletedStatus />
     </article>
   );
