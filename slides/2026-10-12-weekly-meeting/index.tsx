@@ -176,7 +176,7 @@ function ProgressBlock({ current, target = 100, compact = false }: { current: nu
 function PendingCard({ number, title, detail }: { number: string; title: string; detail: string }) {
   return (
     <article style={{
-      height: 360, boxSizing: 'border-box', padding: '42px 48px',
+      height: 500, boxSizing: 'border-box', padding: '42px 48px',
       display: 'flex', flexDirection: 'column',
       background: c.paper, border: `1px solid ${c.rule}`,
       borderTop: `8px solid ${c.gold}`, borderRadius: 'var(--osd-radius)',
@@ -194,31 +194,22 @@ function PendingCard({ number, title, detail }: { number: string; title: string;
 
 const AIOps: Page = () => (
   <Frame name="AIOps">
-    <Heading title="AIOps" subtitle="個案刪除、標籤套用與會員權限" />
-    <div data-content style={{ marginTop: 34 }}>
-      <CompletedBanner
-        title="社工工作台個案刪除流程修正"
-        detail="後端改採軟刪除並保留歷程、補強權限；前端改善錯誤提示與結果確認。"
-      />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 46, marginTop: 24 }}>
-        <PendingCard number="01" title="範本標籤套用改為可選" detail="釐清套用流程與預設狀態" />
-        <PendingCard number="02" title="權限可查看的標籤" detail="僅顯示會員有讀取權限的標籤" />
-      </div>
+    <Heading title="AIOps" subtitle="標籤套用與會員權限" />
+    <div data-content style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 46, marginTop: 66 }}>
+      <PendingCard number="01" title="範本標籤套用改為可選" detail="釐清套用流程與預設狀態" />
+      <PendingCard number="02" title="權限可查看的標籤" detail="僅顯示會員有讀取權限的標籤" />
     </div>
   </Frame>
 );
 
-function CompletedBanner({ title, detail }: { title: string; detail?: string }) {
+function CompletedBanner({ title }: { title: string }) {
   return (
     <article style={{
-      minHeight: detail ? 160 : 126, boxSizing: 'border-box', padding: '24px 32px',
+      minHeight: 126, boxSizing: 'border-box', padding: '24px 32px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 36,
       background: c.paper, borderLeft: `8px solid ${c.teal}`, borderRadius: 'var(--osd-radius)',
     }}>
-      <div>
-        <h2 style={{ margin: 0, fontSize: 44, lineHeight: 1.3, ...heavy }}>{title}</h2>
-        {detail && <p style={{ margin: '10px 0 0', color: c.muted, fontSize: 30, lineHeight: 1.4, ...bold }}>{detail}</p>}
-      </div>
+      <h2 style={{ margin: 0, fontSize: 44, lineHeight: 1.3, ...heavy }}>{title}</h2>
       <CompletedStatus />
     </article>
   );
@@ -269,34 +260,52 @@ function TargetOnly() {
 
 const Dbs: Page = () => (
   <Frame name="DBS">
-    <Heading title="DBS" subtitle="內容體驗與帳號功能" />
-    <div data-content style={{ display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: 46, marginTop: 62 }}>
+    <Heading title="DBS" subtitle="內容體驗、帳號功能與個案刪除驗收" />
+    <div data-content style={{ marginTop: 34 }}>
       <article style={{
-        height: 530, boxSizing: 'border-box', padding: '42px 48px',
-        display: 'flex', flexDirection: 'column',
-        background: c.navy, color: c.paper, borderRadius: 'var(--osd-radius)',
+        minHeight: 160, boxSizing: 'border-box', padding: '24px 32px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 36,
+        background: c.paper, borderLeft: `8px solid ${c.teal}`, borderRadius: 'var(--osd-radius)',
       }}>
-        <CompletedStatus large />
-        <div style={{ width: 62, height: 5, borderRadius: 99, background: 'var(--osd-accent)', marginTop: 34 }} />
-        <h2 style={{ margin: '28px 0 0', fontSize: 56, lineHeight: 1.25, ...heavy }}>知識與內容 UI / UX</h2>
-        <p style={{ margin: '22px 0 0', color: c.light, fontSize: 31, lineHeight: 1.5, ...bold }}>
-          看看文章、電子報、聽聽 Podcast、多多益善專欄及投稿分享入口，提高互動。
-        </p>
-      </article>
-      <article style={{
-        height: 530, boxSizing: 'border-box', padding: '42px 44px',
-        display: 'flex', flexDirection: 'column',
-        background: c.paper, border: `1px solid ${c.rule}`,
-        borderTop: `8px solid ${c.gold}`, borderRadius: 'var(--osd-radius)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Label color={c.gold}>BUG 修復</Label>
-          <Label color={c.gold}>本週</Label>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 44, lineHeight: 1.3, ...heavy }}>驗收社工工作台個案刪除流程修正</h2>
+          <p style={{ margin: '10px 0 0', color: c.muted, fontSize: 30, lineHeight: 1.4, ...bold }}>
+            檢查軟刪除保留歷程、操作權限與前端結果提示。
+          </p>
         </div>
-        <div style={{ width: 60, height: 5, borderRadius: 99, background: 'var(--osd-accent)', marginTop: 42 }} />
-        <h2 style={{ margin: '28px 0 0', fontSize: 58, lineHeight: 1.25, ...heavy }}>忘記密碼</h2>
-        <TargetOnly />
+        <span style={{
+          padding: '10px 24px', borderRadius: 999, flexShrink: 0,
+          color: c.teal, background: c.tealSoft, fontSize: 31, whiteSpace: 'nowrap', ...heavy,
+        }}>驗收</span>
       </article>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: 46, marginTop: 24 }}>
+        <article style={{
+          height: 440, boxSizing: 'border-box', padding: '42px 48px',
+          display: 'flex', flexDirection: 'column',
+          background: c.navy, color: c.paper, borderRadius: 'var(--osd-radius)',
+        }}>
+          <CompletedStatus large />
+          <div style={{ width: 62, height: 5, borderRadius: 99, background: 'var(--osd-accent)', marginTop: 34 }} />
+          <h2 style={{ margin: '28px 0 0', fontSize: 56, lineHeight: 1.25, ...heavy }}>知識與內容 UI / UX</h2>
+          <p style={{ margin: '22px 0 0', color: c.light, fontSize: 31, lineHeight: 1.5, ...bold }}>
+            看看文章、電子報、聽聽 Podcast、多多益善專欄及投稿分享入口，提高互動。
+          </p>
+        </article>
+        <article style={{
+          height: 440, boxSizing: 'border-box', padding: '42px 44px',
+          display: 'flex', flexDirection: 'column',
+          background: c.paper, border: `1px solid ${c.rule}`,
+          borderTop: `8px solid ${c.gold}`, borderRadius: 'var(--osd-radius)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Label color={c.gold}>BUG 修復</Label>
+            <Label color={c.gold}>本週</Label>
+          </div>
+          <div style={{ width: 60, height: 5, borderRadius: 99, background: 'var(--osd-accent)', marginTop: 42 }} />
+          <h2 style={{ margin: '28px 0 0', fontSize: 58, lineHeight: 1.25, ...heavy }}>忘記密碼</h2>
+          <TargetOnly />
+        </article>
+      </div>
     </div>
   </Frame>
 );
