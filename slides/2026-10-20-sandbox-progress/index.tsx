@@ -17,6 +17,8 @@ const c = {
   navy: '#0A3A67',
   ink: '#17344D',
   muted: '#738291',
+  rule: '#D8D3C7',
+  light: '#C4D8E9',
   coral: '#E45F50',
   teal: '#158B83',
   gold: '#D7A443',
@@ -67,6 +69,92 @@ function Footer({ dark = false }: { dark?: boolean }) {
     </>
   );
 }
+
+const Cover: Page = () => (
+  <section style={{ ...base, display: 'grid', placeItems: 'center' }}>
+    <div style={{ position: 'absolute', left: 126, top: 92, display: 'flex', alignItems: 'center', gap: 16 }}>
+      <span style={{ width: 44, height: 7, borderRadius: 99, background: c.coral }} />
+      <span style={{ width: 44, height: 7, borderRadius: 99, background: c.teal }} />
+      <span style={{ width: 44, height: 7, borderRadius: 99, background: c.gold }} />
+      <span style={{ marginLeft: 10, color: c.muted, fontSize: 29, letterSpacing: '0.12em', ...heavy }}>SANDBOX PROGRESS</span>
+    </div>
+
+    <div style={{ textAlign: 'center', marginTop: -18 }}>
+      <div style={{ color: c.navy, fontSize: 78, lineHeight: 1, letterSpacing: '0.03em', ...heavy }}>2026 / 10 / 20</div>
+      <h1 style={{ margin: '32px 0 0', color: c.navy, fontSize: 174, lineHeight: 1, letterSpacing: '-0.035em', ...heavy }}>沙盒進度</h1>
+      <div style={{ marginTop: 50, color: '#456882', fontSize: 30, letterSpacing: '0.16em', ...heavy }}>Shelly</div>
+    </div>
+
+    <Footer />
+  </section>
+);
+
+const SandboxProgress: Page = () => (
+  <section style={{
+    ...base,
+    padding: '78px 110px 108px',
+    background: 'var(--osd-bg)',
+    color: 'var(--osd-text)',
+    fontWeight: 750,
+    fontVariationSettings: '"wght" 750',
+  }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 26, color: c.muted, ...bold }}>
+      <span>本週工作進度</span>
+      <span>Shelly</span>
+    </div>
+
+    <header style={{ marginTop: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+        <span style={{ width: 54, height: 7, borderRadius: 99, background: c.gold }} />
+        <span style={{ fontSize: 26, letterSpacing: '0.12em', color: c.gold, ...heavy }}>WEEKLY REPORT</span>
+      </div>
+      <h1 style={{ margin: '14px 0 0', fontFamily: 'var(--osd-font-display)', fontSize: 84, lineHeight: 1.08, letterSpacing: '-0.025em', ...heavy }}>沙盒</h1>
+      <p style={{ margin: '10px 0 0', fontSize: 30, color: c.muted, lineHeight: 1.35, ...bold }}>目前 30%｜本週預計 55%</p>
+    </header>
+
+    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 26, marginTop: 36 }}>
+      <article style={{ minHeight: 428, padding: '40px 48px', boxSizing: 'border-box', background: c.navy, color: c.paper, borderRadius: 28 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 28 }}>
+          <div>
+            <span style={{ color: c.light, fontSize: 25, letterSpacing: '0.08em', ...heavy }}>素菁沙盒</span>
+            <h2 style={{ margin: '8px 0 0', fontSize: 39, lineHeight: 1.25, ...heavy }}>預計完成　10 月底至 11 月初</h2>
+          </div>
+          <span style={{ padding: '9px 17px', borderRadius: 999, background: '#153F62', color: c.light, fontSize: 25, ...heavy }}>進行中</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 70px 1fr', alignItems: 'center', gap: 20, marginTop: 24 }}>
+          <div>
+            <span style={{ color: c.light, fontSize: 26, letterSpacing: '0.08em', ...heavy }}>目前</span>
+            <div style={{ marginTop: 8, fontSize: 88, lineHeight: 1, ...heavy }}>30<span style={{ fontSize: 38 }}>%</span></div>
+          </div>
+          <div style={{ color: '#E8B867', fontSize: 54, textAlign: 'center', ...heavy }}>→</div>
+          <div>
+            <span style={{ color: '#E8B867', fontSize: 26, letterSpacing: '0.08em', ...heavy }}>本週預計</span>
+            <div style={{ marginTop: 8, color: '#E8B867', fontSize: 88, lineHeight: 1, ...heavy }}>55<span style={{ fontSize: 38 }}>%</span></div>
+          </div>
+        </div>
+        <div style={{ height: 12, marginTop: 22, overflow: 'hidden', borderRadius: 99, background: '#315A7B' }}>
+          <div style={{ width: '55%', height: '100%', background: c.gold }} />
+        </div>
+      </article>
+
+      <aside style={{
+        minHeight: 428,
+        padding: '40px 42px',
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        background: c.paper,
+        border: `1px solid ${c.rule}`,
+        borderRadius: 28,
+      }}>
+        <span style={{ color: c.gold, fontSize: 26, letterSpacing: '0.1em', ...heavy }}>需協助／釐清</span>
+        <h2 style={{ margin: '24px 0 0', fontSize: 54, lineHeight: 1.25, ...heavy }}>確認外部進入平台</h2>
+      </aside>
+    </div>
+
+    <Footer />
+  </section>
+);
 
 type Diagram = 'user' | 'it' | 'flow';
 const viewportWidth = 1668;
@@ -350,4 +438,4 @@ const SandboxVideos: Page = () => {
   );
 };
 
-export default [SandboxDiagram, SandboxVideos] satisfies Page[];
+export default [Cover, SandboxProgress, SandboxDiagram, SandboxVideos] satisfies Page[];
