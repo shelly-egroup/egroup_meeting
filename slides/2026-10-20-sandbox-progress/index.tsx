@@ -378,7 +378,7 @@ function VideoTab({ selected, label, note, onClick }: { selected: boolean; label
 }
 
 const SandboxVideos: Page = () => {
-  const [video, setVideo] = useState<VideoKey>('plan');
+  const [video, setVideo] = useState<VideoKey>('process');
   const info = video === 'plan'
     ? {
       src: sandboxPlanVideo,
