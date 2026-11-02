@@ -508,22 +508,22 @@ const DbsCompleted: Page = () => (
 
 const Sandbox: Page = () => (
   <Frame name="沙盒進度">
-    <Heading title="沙盒" subtitle="本週預計完成｜11 / 06" accent={tone.dbs.main} />
+    <Heading title="沙盒" subtitle="預計完成｜11 月中" accent={tone.dbs.main} />
     <div style={progressGrid}>
       <ProgressBoard tag="SANDBOX" title="素菁沙盒" t={tone.dbs}>
         <BoardNote label="需協助／釐清" text="麻煩學長協助建置部屬初始化精靈" t={tone.dbs} />
       </ProgressBoard>
-      <ProgressAside current={50} target={70} due="11 / 06" t={tone.dbs} />
+      <ProgressAside current={50} target={70} due="11 月中" t={tone.dbs} />
     </div>
   </Frame>
 );
 
 const Gooldays: Page = () => (
   <Frame name="gooldays 進度">
-    <Heading title="gooldays" subtitle="本週預計完成｜11 / 06" accent={tone.dbs.main} />
+    <Heading title="gooldays 夜市" subtitle="預計完成｜11 月中" accent={tone.dbs.main} />
     <div style={progressGrid}>
       <ProgressBoard tag="GOOLDAYS" title="流程與介面設計" t={tone.dbs} />
-      <ProgressAside current={25} target={50} due="11 / 06" t={tone.dbs} />
+      <ProgressAside current={25} target={50} due="11 月中" t={tone.dbs} />
     </div>
   </Frame>
 );
