@@ -520,7 +520,7 @@ const Sandbox: Page = () => (
 
 const Gooldays: Page = () => (
   <Frame name="gooldays 進度">
-    <Heading title="gooldays 夜市" subtitle="預計完成｜11 月中" accent={tone.dbs.main} />
+    <Heading title="gooldays" subtitle="預計完成｜11 月中" accent={tone.dbs.main} />
     <div style={progressGrid}>
       <ProgressBoard tag="GOOLDAYS" title="流程與介面設計" t={tone.dbs} />
       <ProgressAside current={25} target={50} due="11 月中" t={tone.dbs} />
