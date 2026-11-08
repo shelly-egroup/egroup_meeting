@@ -1,0 +1,472 @@
+import type { CSSProperties, ReactNode } from 'react';
+import { useIsActivePage, useSlidePageNumber } from '@open-slide/core';
+import type { DesignSystem, Page, SlideMeta, SlideTransition } from '@open-slide/core';
+
+export const design: DesignSystem = {
+  palette: { bg: '#F7F2E7', text: '#0A3A67', accent: '#E45F50' },
+  fonts: {
+    display: '"Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif',
+    body: '"Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif',
+  },
+  typeScale: { hero: 96, body: 36 },
+  radius: 18,
+};
+
+export const meta: SlideMeta = {
+  title: '2026 / 11 / 09 週會',
+  description: 'AIOps、INFO、DBS 上週完成，INFO、沙盒與 gooldays 本週預計。',
+  author: 'Shelly',
+  createdAt: '2026-11-08T14:40:29.056Z',
+};
+
+const c = {
+  muted: '#738291',
+  rule: '#D8D3C7',
+  navy: '#0A3A67',
+  navyLine: '#506F8A',
+  paper: '#FFFDF8',
+  light: '#C4D8E9',
+  teal: '#158B83',
+  tealSoft: '#DDEEEA',
+  gold: '#D7A443',
+  goldDeep: '#9A6810',
+  goldBright: '#E8B867',
+  goldSoft: '#F4E5B9',
+  coral: '#E45F50',
+  coralSoft: '#F8DDD6',
+};
+
+type Tone = { main: string; deep: string; soft: string; onNavy: string };
+const tone = {
+  aiops: { main: c.coral, deep: '#B8402F', soft: c.coralSoft, onNavy: '#F2A193' },
+  info: { main: c.teal, deep: c.teal, soft: c.tealSoft, onNavy: c.light },
+  dbs: { main: c.gold, deep: c.goldDeep, soft: c.goldSoft, onNavy: c.goldBright },
+} satisfies Record<string, Tone>;
+
+const heavy = { fontWeight: 900, fontVariationSettings: '"wght" 900' } as const;
+const bold = { fontWeight: 850, fontVariationSettings: '"wght" 850' } as const;
+
+const EASE_OUT = 'cubic-bezier(0, 0, 0.2, 1)';
+const EASE_IN = 'cubic-bezier(0.4, 0, 1, 1)';
+
+// Page enter: quiet 6px rise. Cover settles with a hair of blur.
+export const transition: SlideTransition = {
+  duration: 220,
+  exit: {
+    duration: 140, easing: EASE_IN,
+    keyframes: [
+      { opacity: 1, transform: 'translateY(0)' },
+      { opacity: 0, transform: 'translateY(-4px)' },
+    ],
+  },
+  enter: {
+    duration: 220, delay: 80, easing: EASE_OUT,
+    keyframes: [
+      { opacity: 0, transform: 'translateY(6px)' },
+      { opacity: 1, transform: 'translateY(0)' },
+    ],
+  },
+};
+
+// In-page motion. Only the instance the audience watches animates;
+// thumbnails, overview and print render the settled state.
+const motionCss = `
+@keyframes w1109-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes w1109-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes w1109-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes w1109-pop { 0% { opacity: 0; transform: scale(0.82); } 65% { opacity: 1; transform: scale(1.06); } 100% { opacity: 1; transform: scale(1); } }
+@property --w1109-n { syntax: '<integer>'; inherits: false; initial-value: 0; }
+@keyframes w1109-count { from { --w1109-n: var(--w1109-from); } }
+.w1109-count::after { content: counter(w1109); }
+@keyframes w1109-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.8); } }
+`;
+
+function MotionStyles() {
+  return <style>{motionCss}</style>;
+}
+
+function useMotion(name: 'rise' | 'fade' | 'grow' | 'pop', delay = 0, duration = 560): CSSProperties {
+  const live = useIsActivePage();
+  if (!live) return {};
+  return { animation: `w1109-${name} ${duration}ms ${EASE_OUT} ${delay}ms both` };
+}
+
+// Counts from `from` to `to` on the CSS animation clock, so it stays in sync with the bar.
+function CountUp({ from, to, delay = 0 }: { from: number; to: number; delay?: number }) {
+  const live = useIsActivePage();
+  const style = {
+    '--w1109-from': from,
+    '--w1109-n': to,
+    counterReset: 'w1109 var(--w1109-n)',
+    animation: live ? `w1109-count 1100ms ${EASE_OUT} ${delay}ms both` : 'none',
+  } as CSSProperties;
+  return <span className="w1109-count" style={style} aria-label={String(to)} />;
+}
+
+function Footer() {
+  const { current, total } = useSlidePageNumber();
+  return (
+    <footer style={{
+      position: 'absolute', bottom: 52, left: 110, right: 110,
+      display: 'flex', justifyContent: 'space-between',
+      fontSize: 24, color: c.muted, ...bold,
+    }}>
+      <span>2026 / 11 / 09 週會</span>
+      <span>{String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}</span>
+    </footer>
+  );
+}
+
+function Frame({ name, children }: { name: string; children: ReactNode }) {
+  return (
+    <section data-weekly-page={name} style={{
+      width: '100%', height: '100%', position: 'relative',
+      boxSizing: 'border-box', padding: '70px 110px 108px',
+      background: 'var(--osd-bg)', color: 'var(--osd-text)',
+      fontFamily: 'var(--osd-font-body)', fontWeight: 750,
+      fontVariationSettings: '"wght" 750',
+    }}>
+      <MotionStyles />
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        fontSize: 26, ...bold, color: c.muted,
+      }}>
+        <span>本週工作進度</span>
+        <span>Shelly</span>
+      </div>
+      {children}
+      <Footer />
+    </section>
+  );
+}
+
+function Heading({ title, subtitle, accent }: { title: string; subtitle: string; accent: string }) {
+  const line = useMotion('grow', 60, 520);
+  const titleIn = useMotion('rise', 0, 520);
+  const subIn = useMotion('rise', 120, 520);
+  return (
+    <header style={{ marginTop: 18 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+        <span style={{ width: 54, height: 7, borderRadius: 99, background: accent, transformOrigin: 'left', ...line }} />
+        <span style={{ fontSize: 26, letterSpacing: '0.12em', color: accent, ...heavy }}>WEEKLY REPORT</span>
+      </div>
+      <h1 style={{
+        margin: '10px 0 0', fontFamily: 'var(--osd-font-display)',
+        fontSize: 76, lineHeight: 1.08, letterSpacing: '-0.025em', ...heavy, ...titleIn,
+      }}>{title}</h1>
+      <p style={{ margin: '7px 0 0', fontSize: 29, color: c.muted, lineHeight: 1.35, ...bold, ...subIn }}>{subtitle}</p>
+    </header>
+  );
+}
+
+function DoneBadge({ t, delay }: { t: Tone; delay: number }) {
+  const pop = useMotion('pop', delay, 460);
+  return (
+    <span style={{
+      flexShrink: 0, padding: '8px 16px', borderRadius: 999,
+      background: t.soft, color: t.deep, fontSize: 22, ...heavy, ...pop,
+    }}>✓ 完成</span>
+  );
+}
+
+function DoneRow({ index, title, note, t, order, height = 118 }: {
+  index: string; title: string; note?: string; t: Tone; order: number; height?: number;
+}) {
+  const delay = 260 + order * 90;
+  const rise = useMotion('rise', delay);
+  const tall = height >= 160;
+  return (
+    <article style={{
+      height, boxSizing: 'border-box', padding: '0 34px 0 30px',
+      display: 'grid', gridTemplateColumns: '68px 1fr auto', alignItems: 'center', gap: 22,
+      background: c.paper, border: `1px solid ${c.rule}`, borderRadius: 22,
+      borderLeft: `8px solid ${t.main}`, ...rise,
+    }}>
+      <span style={{ color: t.main, fontSize: 34, ...heavy }}>{index}</span>
+      <div>
+        <h2 style={{ margin: 0, fontSize: tall ? 46 : 36, lineHeight: 1.2, ...heavy }}>{title}</h2>
+        {note && <p style={{ margin: tall ? '12px 0 0' : '7px 0 0', color: c.muted, fontSize: tall ? 27 : 23, lineHeight: 1.35, ...bold }}>{note}</p>}
+      </div>
+      <DoneBadge t={t} delay={delay + 320} />
+    </article>
+  );
+}
+
+function ProgressBar({ current, target, t }: { current: number; target: number; t: Tone }) {
+  const grow = useMotion('grow', 520, 1100);
+  return (
+    <div style={{ position: 'relative', height: 16, borderRadius: 99, background: 'rgba(10, 58, 103, 0.10)', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', inset: 0, width: `${current}%`, background: t.deep }} />
+      <div style={{
+        position: 'absolute', top: 0, bottom: 0, left: `${current}%`, width: `${target - current}%`,
+        background: `repeating-linear-gradient(135deg, ${t.main} 0 10px, ${t.soft} 10px 18px)`,
+        transformOrigin: 'left', ...grow,
+      }} />
+    </div>
+  );
+}
+
+function ProgressAside({ current, target, due, t }: { current: number; target: number; due: string; t: Tone }) {
+  const rise = useMotion('rise', 220);
+  return (
+    <aside style={{
+      padding: '44px 46px 42px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
+      background: t.soft, borderRadius: 28, ...rise,
+    }}>
+      <span style={{ color: t.deep, fontSize: 27, letterSpacing: '0.08em', ...heavy }}>目前</span>
+      <div style={{ marginTop: 8, display: 'flex', alignItems: 'baseline', gap: 12 }}>
+        <strong style={{ fontSize: 96, lineHeight: 1, ...heavy }}>{current}</strong>
+        <span style={{ fontSize: 40, ...heavy }}>%</span>
+      </div>
+      <div style={{ margin: '34px 0 30px' }}>
+        <ProgressBar current={current} target={target} t={t} />
+      </div>
+      <span style={{ color: t.deep, fontSize: 27, letterSpacing: '0.08em', ...heavy }}>本週預計</span>
+      <div style={{ marginTop: 8, display: 'flex', alignItems: 'baseline', gap: 12, color: t.deep }}>
+        <strong style={{ fontSize: 96, lineHeight: 1, ...heavy }}><CountUp from={current} to={target} delay={520} /></strong>
+        <span style={{ fontSize: 40, ...heavy }}>%</span>
+      </div>
+      <div style={{
+        marginTop: 'auto', paddingTop: 22, borderTop: `2px solid ${t.main}33`,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+      }}>
+        <span style={{ color: c.muted, fontSize: 25, ...bold }}>預計完成</span>
+        <span style={{ fontSize: 36, ...heavy }}>{due}</span>
+      </div>
+    </aside>
+  );
+}
+
+function LiveChip({ color }: { color: string }) {
+  const live = useIsActivePage();
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 12,
+      padding: '10px 20px', borderRadius: 999, background: '#153F62', color: c.light, fontSize: 25, ...heavy,
+    }}>
+      <span style={{
+        width: 12, height: 12, borderRadius: 99, background: color,
+        animation: live ? 'w1109-pulse 1.6s ease-in-out infinite' : 'none',
+      }} />
+      進行中
+    </span>
+  );
+}
+
+function ProgressBoard({ tag, title, t, done = false, children }: { tag: string; title?: string; t: Tone; done?: boolean; children?: ReactNode }) {
+  const rise = useMotion('rise', 160);
+  return (
+    <article style={{
+      padding: '40px 54px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
+      background: c.navy, color: c.paper, borderRadius: 28, ...rise,
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ color: t.onNavy, fontSize: 27, letterSpacing: '0.12em', ...heavy }}>{tag}</span>
+        {done ? <DoneChip color={t.onNavy} /> : <LiveChip color={t.onNavy} />}
+      </div>
+      {title ? (<h2 style={{
+        margin: children ? '22px 0 0' : 'auto 0 0',
+        fontSize: children ? 64 : 104, lineHeight: 1.12, letterSpacing: '-0.01em', ...heavy,
+      }}>{title}</h2>) : null}
+      {children ?? <div style={{ width: 96, height: 8, marginTop: 30, borderRadius: 99, background: t.onNavy }} />}
+    </article>
+  );
+}
+
+function DoneChip({ color }: { color: string }) {
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 10,
+      padding: '10px 20px', borderRadius: 999, background: '#153F62', color: c.paper, fontSize: 25, ...heavy,
+    }}>
+      <span style={{ color }}>✓</span>
+      完成
+    </span>
+  );
+}
+
+function BoardItems({ children }: { children: ReactNode }) {
+  return <div style={{ flex: 1, minHeight: 0, display: 'grid', gridAutoRows: 'minmax(0, 1fr)', marginTop: 24 }}>{children}</div>;
+}
+
+function BoardItem({ title, note, order, compact = false }: { title: string; note?: string; order: number; compact?: boolean }) {
+  const rise = useMotion('rise', 380 + order * 140);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', borderTop: `1px solid ${c.navyLine}`, ...rise }}>
+      <div style={{ fontSize: compact ? 48 : 56, lineHeight: 1.25, ...heavy }}>{title}</div>
+      {note ? <div style={{ marginTop: 10, color: c.light, fontSize: compact ? 28 : 32, lineHeight: 1.35, ...bold }}>{note}</div> : null}
+    </div>
+  );
+}
+
+function DoneAside({ t }: { t: Tone }) {
+  const rise = useMotion('rise', 220);
+  const grow = useMotion('grow', 520, 1100);
+  const pop = useMotion('pop', 1500, 460);
+  return (
+    <aside style={{
+      padding: '44px 46px 42px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column',
+      background: t.soft, borderRadius: 28, ...rise,
+    }}>
+      <span style={{ color: t.deep, fontSize: 27, letterSpacing: '0.08em', ...heavy }}>目前</span>
+      <div style={{ marginTop: 8, display: 'flex', alignItems: 'baseline', gap: 12, color: t.deep }}>
+        <strong style={{ fontSize: 96, lineHeight: 1, ...heavy }}><CountUp from={0} to={100} delay={520} /></strong>
+        <span style={{ fontSize: 40, ...heavy }}>%</span>
+      </div>
+      <div style={{ position: 'relative', height: 16, margin: '34px 0 30px', borderRadius: 99, background: 'rgba(10, 58, 103, 0.10)', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: t.deep, transformOrigin: 'left', ...grow }} />
+      </div>
+      <span style={{ color: t.deep, fontSize: 27, letterSpacing: '0.08em', ...heavy }}>狀態</span>
+      <div style={{ marginTop: 8, color: t.deep, fontSize: 92, lineHeight: 1.05, transformOrigin: 'left center', ...heavy, ...pop }}>✓ 完成</div>
+      <div style={{
+        marginTop: 'auto', paddingTop: 22, borderTop: `2px solid ${t.main}33`,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+      }}>
+        <span style={{ color: c.muted, fontSize: 25, ...bold }}>完成時間</span>
+        <span style={{ fontSize: 36, ...heavy }}>上週</span>
+      </div>
+    </aside>
+  );
+}
+
+const progressGrid: CSSProperties = {
+  display: 'grid', gridTemplateColumns: '1.32fr 0.68fr',
+  height: 620, gap: 26, marginTop: 32,
+};
+
+const Cover: Page = () => {
+  const eyebrow = useMotion('fade', 0, 600);
+  const line = useMotion('grow', 120, 600);
+  const date = useMotion('rise', 140, 640);
+  const title = useMotion('rise', 280, 640);
+  const name = useMotion('rise', 440, 640);
+  return (
+    <section data-weekly-page="封面" style={{
+      width: '100%', height: '100%', position: 'relative', boxSizing: 'border-box',
+      display: 'grid', placeItems: 'center', padding: 110,
+      background: 'var(--osd-bg)', color: 'var(--osd-text)',
+      fontFamily: 'var(--osd-font-display)',
+    }}>
+      <MotionStyles />
+      <div style={{ position: 'absolute', top: 96, left: 110, display: 'flex', alignItems: 'center', gap: 18, ...eyebrow }}>
+        <span style={{ width: 56, height: 7, borderRadius: 99, background: 'var(--osd-accent)', transformOrigin: 'left', ...line }} />
+        <span style={{ fontSize: 28, letterSpacing: '0.1em', color: c.muted, ...heavy }}>WEEKLY REPORT</span>
+      </div>
+      <div data-content style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: 108, lineHeight: 1.1, letterSpacing: '-0.015em', ...heavy, ...date }}>2026 / 11 / 09</div>
+        <h1 style={{ fontSize: 150, lineHeight: 1.1, letterSpacing: '-0.02em', margin: '26px 0 0', ...heavy, ...title }}>週會報告</h1>
+        <div style={{ marginTop: 42, fontSize: 32, lineHeight: 1.2, letterSpacing: '0.12em', color: '#456882', ...heavy, ...name }}>Shelly</div>
+      </div>
+      <Footer />
+    </section>
+  );
+};
+
+Cover.transition = {
+  duration: 280,
+  exit: {
+    duration: 160, easing: EASE_IN,
+    keyframes: [
+      { opacity: 1, transform: 'translateY(0)' },
+      { opacity: 0, transform: 'translateY(-6px)' },
+    ],
+  },
+  enter: {
+    duration: 280, delay: 100, easing: EASE_OUT,
+    keyframes: [
+      { opacity: 0, transform: 'translateY(12px)', filter: 'blur(4px)' },
+      { opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' },
+    ],
+  },
+};
+
+const AIOps: Page = () => (
+  <Frame name="AIOps 上週完成">
+    <Heading title="AIOps" subtitle="上週完成" accent={tone.aiops.main} />
+    <div style={progressGrid}>
+      <ProgressBoard tag="AIOPS" t={tone.aiops} done>
+        <BoardItems>
+          <BoardItem order={0} title="篩選 TAG 選項依會員讀取權限" note="會員、個案、夥伴、事件、文章、布告欄一致套用授權" />
+          <BoardItem order={1} title="個案群組展開狀態與搜尋定位" note="重整、排序後保留展開；搜尋命中收合欄位自動展開定位" />
+        </BoardItems>
+      </ProgressBoard>
+      <DoneAside t={tone.aiops} />
+    </div>
+  </Frame>
+);
+
+const InfoDone: Page = () => (
+  <Frame name="INFO 上週完成">
+    <Heading title="Info" subtitle="上週完成" accent={tone.info.main} />
+    <div style={progressGrid}>
+      <ProgressBoard tag="INFO" t={tone.info} done>
+        <BoardItems>
+          <BoardItem compact order={0} title="CRM 客戶欄位歷史紀錄匯出" note="客戶頁可匯出全部、單一或選定欄位的修改紀錄" />
+          <BoardItem compact order={1} title="過濾站匯入紀錄" note="保存與查詢匯入紀錄，顯示匯入紀錄及逐筆內容" />
+          <BoardItem compact order={2} title="CRM 畫面修正" note="客戶資料欄位及歷史紀錄跑版修正" />
+        </BoardItems>
+      </ProgressBoard>
+      <DoneAside t={tone.info} />
+    </div>
+  </Frame>
+);
+
+const DbsCompleted: Page = () => (
+  <Frame name="DBS 上週完成">
+    <Heading title="DBS" subtitle="上週完成" accent={tone.dbs.main} />
+    <div style={progressGrid}>
+      <ProgressBoard tag="DBS" t={tone.dbs} done>
+        <BoardItems>
+          <BoardItem order={0} title="首頁改版 UI / UX" note="「理線」主題重新設計" />
+          <BoardItem order={1} title="已註冊登入帳號問題排除" />
+        </BoardItems>
+      </ProgressBoard>
+      <DoneAside t={tone.dbs} />
+    </div>
+  </Frame>
+);
+
+const InfoPlan: Page = () => (
+  <Frame name="INFO 本週預計">
+    <Heading title="Info" subtitle="本週預計完成｜11 / 13" accent={tone.info.main} />
+    <div style={progressGrid}>
+      <ProgressBoard tag="INFO" t={tone.info}>
+        <BoardItems>
+          <BoardItem order={0} title="分享範本封存功能" note="暫不收件的範本可封存、還原" />
+          <BoardItem order={1} title="根據權限新增標籤" />
+        </BoardItems>
+      </ProgressBoard>
+      <ProgressAside current={0} target={100} due="11 / 13" t={tone.info} />
+    </div>
+  </Frame>
+);
+
+const Sandbox: Page = () => (
+  <Frame name="沙盒進度">
+    <Heading title="沙盒" subtitle="預計完成｜11 月中-底" accent={tone.dbs.main} />
+    <div style={progressGrid}>
+      <ProgressBoard tag="SANDBOX" title="素菁沙盒" t={tone.dbs} />
+      <ProgressAside current={65} target={80} due="11 月中-底" t={tone.dbs} />
+    </div>
+  </Frame>
+);
+
+const Gooldays: Page = () => (
+  <Frame name="gooldays 進度">
+    <Heading title="gooldays" subtitle="預計完成｜11 月中" accent={tone.dbs.main} />
+    <div style={progressGrid}>
+      <ProgressBoard tag="GOOLDAYS" title="流程與介面設計" t={tone.dbs} />
+      <ProgressAside current={50} target={70} due="11 月中" t={tone.dbs} />
+    </div>
+  </Frame>
+);
+
+export default [
+  Cover,
+  AIOps,
+  InfoDone,
+  DbsCompleted,
+  InfoPlan,
+  Sandbox,
+  Gooldays,
+] satisfies Page[];
