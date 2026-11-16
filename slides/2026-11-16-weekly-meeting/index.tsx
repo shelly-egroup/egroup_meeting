@@ -253,7 +253,21 @@ function LiveChip({ color }: { color: string }) {
   );
 }
 
-function ProgressBoard({ tag, title, t, done = false, children }: { tag: string; title?: string; t: Tone; done?: boolean; children?: ReactNode }) {
+function BoardLink({ href, color }: { href: string; color: string }) {
+  const rise = useMotion('rise', 420);
+  const label = href.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  return (
+    <a href={href} target="_blank" rel="noreferrer" style={{
+      alignSelf: 'flex-start', marginTop: 34,
+      padding: '14px 28px', borderRadius: 999, background: '#153F62',
+      color, fontSize: 32, lineHeight: 1.2, textDecoration: 'none', ...heavy, ...rise,
+    }}>
+      {label} ↗
+    </a>
+  );
+}
+
+function ProgressBoard({ tag, title, t, done = false, link, children }: { tag: string; title?: string; t: Tone; done?: boolean; link?: string; children?: ReactNode }) {
   const rise = useMotion('rise', 160);
   return (
     <article style={{
@@ -269,6 +283,7 @@ function ProgressBoard({ tag, title, t, done = false, children }: { tag: string;
         fontSize: children ? 64 : 104, lineHeight: 1.12, letterSpacing: '-0.01em', ...heavy,
       }}>{title}</h2>) : null}
       {children ?? <div style={{ width: 96, height: 8, marginTop: 30, borderRadius: 99, background: t.onNavy }} />}
+      {link ? <BoardLink href={link} color={t.onNavy} /> : null}
     </article>
   );
 }
@@ -449,7 +464,7 @@ const Gooldays: Page = () => (
   <Frame name="gooldays 進度">
     <Heading title="gooldays" subtitle="預計完成｜11 月底" accent={tone.dbs.main} />
     <div style={progressGrid}>
-      <ProgressBoard tag="GOOLDAYS" title="流程與介面設計" t={tone.dbs} />
+      <ProgressBoard tag="GOOLDAYS" title="流程與介面設計" t={tone.dbs} link="https://dev.gooldays.com/" />
       <ProgressAside current={80} target={90} due="11 月底" t={tone.dbs} />
     </div>
   </Frame>
