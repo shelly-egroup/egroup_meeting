@@ -14,7 +14,7 @@ export const design: DesignSystem = {
 
 export const meta: SlideMeta = {
   title: '2026 / 11 / 23 週會',
-  description: '上週完成 INFO 與 DBS BUG 修正；本週預計 INFO、DBS、沙盒與 gooldays 進度。',
+  description: '上週完成 INFO 與 DBS BUG 修正、家系圖改版；本週預計 INFO、DBS、沙盒與 gooldays 進度。',
   author: 'Shelly',
   createdAt: '2026-11-23T08:00:00.000Z',
 };
@@ -419,7 +419,8 @@ const LastWeek: Page = () => (
           <DoneLine order={1} tag="INFO" t={tone.info} title="語音轉文字解碼失敗 BUG 修正" note="解碼失敗時自動改用驗證過的 FLAC 音檔重試" />
           <DoneLine order={2} tag="INFO" t={tone.info} title="事件 Excel 匯出 BUG 修正" note="支援含毫秒的日期，匯出失敗顯示正確訊息" />
           <DoneLine order={3} tag="INFO" t={tone.info} title="過濾站舊匯入紀錄讀取 BUG 修正" note="缺少統計欄位的舊紀錄可正常讀取" />
-          <DoneLine order={4} tag="DBS" t={tone.dbs} title="上傳語音檔拖曳失敗 BUG 修正" note="Windows 經 USB 連線手機拖入音檔可正常上傳" />
+          <DoneLine order={4} tag="DBS" t={tone.dbs} title="家系圖 BUG 修正與改版" note="進度 70% → 100%，全數完成" />
+          <DoneLine order={5} tag="DBS" t={tone.dbs} title="上傳語音檔拖曳失敗 BUG 修正" note="Windows 經 USB 連線手機拖入音檔可正常上傳" />
         </BoardItems>
       </ProgressBoard>
     </div>
